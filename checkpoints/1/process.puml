@@ -1,11 +1,17 @@
 @startuml
-'https://plantuml.com/sequence-diagram
+'process-view'
 
-autonumber
+start
 
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
+:Проверка имени и экземпляров образцов;
 
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
+if (Данные прошли проверку) then (да)
+    :Разделить полученные образцы;
+    :Сохранить данные для обучения;
+    stop
+else (нет)
+    :Отправить ответ с ошибкой;
+    stop
+endif
+
 @enduml

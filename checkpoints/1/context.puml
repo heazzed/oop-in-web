@@ -1,20 +1,21 @@
 @startuml
-'context'
+'context-view'
 
-left to right direction
-skinparam monochrome true
-skinparam handwritten false
-skinparam shadowing false
-
-actor Botanist as b
-actor User as u
-package Classifier {
-  usecase "Provide Training Data" as UC1
-  usecase "Set Parameters and Test Classifier" as UC2
-  usecase "Make Classification Request" as UC3
+package Классификатор{
+  usecase "Установить параметры обучения" as set_params
+  usecase "Обучить модель" as train_model
+  usecase "Загрузить тестовые данные" as set_test_data
+  usecase "Классифицировать объект" as classify_object
 }
 
-b --> UC1
-b --> UC2
-u --> UC3
+actor "Специалист по машинному обучению" as specialist
+actor "Пользователь" as user
+
+specialist --> set_test_data
+specialist --> set_params
+specialist --> train_model
+specialist --> classify_object
+
+
+user --> classify_object
 @enduml

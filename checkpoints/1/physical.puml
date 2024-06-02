@@ -1,11 +1,17 @@
 @startuml
-'https://plantuml.com/sequence-diagram
+'physical-view'
 
-autonumber
+node Клиент {
+  [Клиентское приложение]
+}
 
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
+node Сервер {
+  [Веб-сервер]
+  [Классификатор]
+}
 
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
+[Веб-сервер] ..> [Классификатор]
+HTTPS - [Веб-сервер]
+[Клиентское приложение] --> HTTPS
+
 @enduml

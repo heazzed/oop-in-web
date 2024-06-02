@@ -1,11 +1,34 @@
 @startuml
-'https://plantuml.com/sequence-diagram
+'logical-view'
 
-autonumber
+hide class circle
 
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
+class TrainingData {
+    name: str
+    uploaded: datetime
+    tested: datetime
+}
+class Sample {
+    sepal_length: float
+    sepal_width: float
+    petal_length: float
+    petal_width: float
+}
+class KnownSample {
+    species: str
+}
+class Hyperparameter {
+    k: int
+    quality: float
+}
+class "List[KnownSample]"
+class "List[Hyperparameter]"
+TrainingData *---> "List[KnownSample]" : training >
+TrainingData *---> "List[KnownSample]" : testing >
+TrainingData *---> "List[Hyperparameter]" : tuning >
+"List[KnownSample]" o--> KnownSample
+"List[Hyperparameter]" *--> Hyperparameter
+Sample <|-- KnownSample
+Hyperparameter ...> TrainingData : data >
 
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
 @enduml
