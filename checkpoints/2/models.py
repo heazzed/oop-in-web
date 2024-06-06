@@ -45,57 +45,6 @@ class Client:
         return self.status == self.classification
 
 
-class TrainingData:
-    name: str
-
-    uploaded: datetime
-    tested: datetime
-
-    training: list[Client]
-    testing: list[Client]
-    tuning: list[Hyperparameter]
-
-    def __init__(self, name: str) -> None:
-        self.name = name
-
-    def load(self, raw_data: Iterable[dict[str, str]]) -> None:
-        for count, data in enumerate(raw_data):
-            client = Client(
-                seniority=int(data["seniority"]),
-                home=int(data["home"]),
-                time=int(data["time"]),
-                age=int(data["age"]),
-                marital=int(data["marital"]),
-                records=int(data["records"]),
-                job=int(data["job"]),
-                expenses=int(data["expenses"]),
-                income=int(data["income"]),
-                assets=int(data["assets"]),
-                debt=int(data["debt"]),
-                amount=int(data["amount"]),
-                price=int(data["price"]),
-                status=int(data["status"]),
-            )
-
-            if count % 5 == 0:
-                self.testing.append(client)
-            else:
-                self.training.append(client)
-
-        self.uploaded = datetime.utcnow() + timedelta(hours=3)
-
-    def test(self, parameter: Hyperparameter) -> None:
-        parameter.test()
-        self.tuning.append(parameter)
-        self.tested = datetime.utcnow() + timedelta(hours=3)
-
-    @staticmethod
-    def classify(parameter: Hyperparameter, client: Client) -> Client:
-        classification = parameter.classify([client])[0]
-        client.set_classification(classification)
-        return client
-
-
 class Hyperparameter:
     max_depth: int
     min_samples_leaf: int
@@ -106,7 +55,6 @@ class Hyperparameter:
         self.max_depth = max_depth
         self.min_samples_leaf = min_samples_leaf
         self.data = training
-        self.quality: float
 
     def test(self) -> None:
         pass_count, fail_count = 0, 0
@@ -148,3 +96,54 @@ class Hyperparameter:
             ]
             for client in clients
         ]
+
+
+class TrainingData:
+    name: str
+
+    uploaded: datetime
+    tested: datetime
+
+    training: list[Client] = list()
+    testing: list[Client] = list()
+    tuning: list[Hyperparameter] = list()
+
+    def __init__(self, name: str) -> None:
+        self.name = name
+
+    def load(self, raw_data: Iterable[dict[str, int]]) -> None:
+        for count, data in enumerate(raw_data):
+            client = Client(
+                seniority=int(data["seniority"]),
+                home=int(data["home"]),
+                time=int(data["time"]),
+                age=int(data["age"]),
+                marital=int(data["marital"]),
+                records=int(data["records"]),
+                job=int(data["job"]),
+                expenses=int(data["expenses"]),
+                income=int(data["income"]),
+                assets=int(data["assets"]),
+                debt=int(data["debt"]),
+                amount=int(data["amount"]),
+                price=int(data["price"]),
+                status=int(data["status"]),
+            )
+
+            if count % 5 == 0:
+                self.testing.append(client)
+            else:
+                self.training.append(client)
+
+        self.uploaded = datetime.utcnow() + timedelta(hours=3)
+
+    def test(self, parameter: Hyperparameter) -> None:
+        parameter.test()
+        self.tuning.append(parameter)
+        self.tested = datetime.utcnow() + timedelta(hours=3)
+
+    @staticmethod
+    def classify(parameter: Hyperparameter, client: Client) -> Client:
+        classification = parameter.classify([client])[0]
+        client.set_classification(classification)
+        return client

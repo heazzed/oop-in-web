@@ -46,8 +46,8 @@ class KnownClient(Client):
         self.status = status
 
     @classmethod
-    def from_dict(cls, data: dict["str", "str"]) -> "KnownClient":
-        if data["status"] not in {'1', '2', '0'}:
+    def from_dict(cls, data: dict[str, int]) -> KnownClient:
+        if data["status"] not in {1, 2, 0}:
             raise InvalidClientError(f"Invalid client in {data!r}")
         try:
             return cls(
@@ -73,7 +73,7 @@ class KnownClient(Client):
 class TrainingKnownClient(KnownClient):
 
     @classmethod
-    def from_dict(cls, row: dict[str, str]) -> "TrainingKnownClient":
+    def from_dict(cls, row: dict[str, int]) -> TrainingKnownClient:
         return cast(TrainingKnownClient, super().from_dict(row))
 
 
@@ -81,7 +81,7 @@ class TestingKnownClient(KnownClient):
     classification: Optional[str]
 
     def __init__(self, status: int, seniority: int, home: int, time: int, age: int, marital: int, records: int, job: int,
-                 expenses: int, income: int, assets: int, debt: int, amount: int, price: int, classification: Optional[str]) -> None:
+                 expenses: int, income: int, assets: int, debt: int, amount: int, price: int, classification: Optional[str] = None) -> None:
         super().__init__(status, seniority, home, time, age, marital, records, job, expenses, income, assets, debt, amount, price)
         self.classification = classification
 
@@ -89,13 +89,13 @@ class TestingKnownClient(KnownClient):
         return self.status == self.classification
 
     @classmethod
-    def from_dict(cls, row: dict[str, str]) -> "TestingKnownClient":
+    def from_dict(cls, row: dict[str, int]) -> TestingKnownClient:
         return cast(TestingKnownClient, super().from_dict(row))
 
 
 class UnknownClient(Client):
     @classmethod
-    def from_dict(cls, data: dict[str, str]) -> "UnknownClient":
+    def from_dict(cls, data: dict[str, int]) -> "UnknownClient":
         if set(data.keys()) != {"seniority", "home", "time", "age", "marital", "records", "job",
                                 "expenses", "income", "assets", "debt", "amount", "price"}:
             raise InvalidClientError(f"Invalid fields in {data!r}")
@@ -120,9 +120,9 @@ class UnknownClient(Client):
 
 
 class ClassifiedClient(Client):
-    classification: Optional[int]
+    classification: Optional[str]
 
-    def __init__(self, classification: Optional[int], client: UnknownClient) -> None:
+    def __init__(self, classification: Optional[str], client: UnknownClient) -> None:
         super().__init__(
             seniority=client.seniority,
             home=client.home,
@@ -196,7 +196,7 @@ class TrainingData:
         self.testing: list[TestingKnownClient] = []
         self.tuning: list[Hyperparameter] = []
 
-    def load(self, raw_data: Iterable[dict[str, str]]) -> None:
+    def load(self, raw_data: Iterable[dict[str, int]]) -> None:
         for n, row in enumerate(raw_data):
             if n % 5 == 0:
                 testing_client = TestingKnownClient.from_dict(row)
