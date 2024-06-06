@@ -1,0 +1,47 @@
+@startuml
+'logical-view-4'
+
+hide class circle
+
+class TrainingData {
+    name: str
+    uploaded: datetime
+    tested: datetime
+    parameter: list[Hyperparameter]
+    testing: list[Client]
+    training: list[Client]
+}
+
+class Hyperparameter {
+    max_depth: int
+    min_samples_leaf: int
+    data: TrainingData
+    quality: float
+}
+
+class Client {
+    Seniority: int
+    Home: int
+    Time: int
+    Age: int
+    Marital: int
+    Records: int
+    Job: int
+    Expenses: int
+    Income: int
+    Assets: int
+    Debt: int
+    Amount: int
+    Price: int
+}
+
+TrainingData *---> Hyperparameter : tuning >
+TrainingData *---> TrainingKnownClient : training >
+TrainingData *---> TestingKnownClient : testing >
+KnownClient <|-- TrainingKnownClient
+KnownClient <|-- TestingKnownClient
+KnownClient <|-- Client
+Hyperparameter ..> TrainingData : data >
+
+
+@enduml

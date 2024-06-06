@@ -1,0 +1,37 @@
+@startuml
+'logical-view-1'
+
+hide class circle
+
+class TrainingData {
+    name: str
+    uploaded: datetime
+    tested: datetime
+    max_depth: int
+    min_samples_leaf: int
+}
+
+class List[Client]
+
+class Client {
+    Status: int
+    Seniority: int
+    Home: int
+    Time: int
+    Age: int
+    Marital: int
+    Records: int
+    Job: int
+    Expenses: int
+    Income: int
+    Assets: int
+    Debt: int
+    Amount: int
+    Price: int
+}
+
+TrainingData *--> "List[Client]" : training >
+TrainingData *--> "List[Client]" : testing >
+"List[Client]" o--> Client
+
+@enduml

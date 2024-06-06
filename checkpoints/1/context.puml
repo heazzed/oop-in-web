@@ -3,19 +3,19 @@
 
 package Классификатор{
   usecase "Установить параметры обучения" as set_params
+  usecase "Загрузить данные для обучения" as set_test_data
   usecase "Обучить модель" as train_model
-  usecase "Загрузить тестовые данные" as set_test_data
-  usecase "Классифицировать объект" as classify_object
+  usecase "Тестировать классификатор" as test_model
+  usecase "Оставить заявку на кредит" as request_credit
 }
 
-actor "Специалист по машинному обучению" as specialist
-actor "Пользователь" as user
+actor "Работник банка" as specialist
+actor "Клиент" as client
 
 specialist --> set_test_data
 specialist --> set_params
 specialist --> train_model
-specialist --> classify_object
+specialist --> test_model
 
-
-user --> classify_object
+client --> request_credit
 @enduml
