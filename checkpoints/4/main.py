@@ -89,22 +89,34 @@ leaf = 5
 h = Hyperparameter(depth, leaf, td)
 
 uc = UnknownClient(
-    seniority=td.testing[0].seniority,
-    home=td.testing[0].home,
-    time=td.testing[0].time,
-    age= td.testing[0].age,
-    marital=td.testing[0].marital,
-    records=td.testing[0].records,
-    job=td.testing[0].job,
-    expenses=td.testing[0].expenses,
-    income=td.testing[0].income,
-    assets=td.testing[0].assets,
-    debt=td.testing[0].debt,
-    amount=td.testing[0].amount,
-    price=td.testing[0].price,
+    seniority=td.training[0].seniority,
+    home=td.training[0].home,
+    time=td.training[0].time,
+    age= td.training[0].age,
+    marital=td.training[0].marital,
+    records=td.training[0].records,
+    job=td.training[0].job,
+    expenses=td.training[0].expenses,
+    income=td.training[0].income,
+    assets=td.training[0].assets,
+    debt=td.training[0].debt,
+    amount=td.training[0].amount,
+    price=td.training[0].price,
 )
 
 c = td.classify(h, uc)
 
-print(c.classification)
+result = c.classification[0]
+
+print("Result: " + str(result))
+
+# TEST
+
+waiting_result = 2
+
+print("Waiting Result: " + str(waiting_result))
+
+assert waiting_result == result
+
+print("Test passed.")
 

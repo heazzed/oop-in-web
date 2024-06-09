@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from models import TrainingData, Client, Hyperparameter
+from models import TrainingData, Hyperparameter
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction import DictVectorizer
 
@@ -40,7 +40,7 @@ records_values = {
 
 job_values = {
     1: 'fixed',
-    2: 'partime',
+    2: 'parttime',
     3: 'freelance',
     4: 'others',
     0: 'unk'
@@ -66,7 +66,7 @@ df_train, df_val = train_test_split(df_train_full, test_size=0.25, random_state=
 y_train = (df_train.status == 'default').values
 y_val = (df_val.status == 'default').values
 
-#del df_train['status']
+# del df_train['status']
 del df_val['status']
 
 df_train = df_train.fillna(0)
@@ -90,4 +90,16 @@ h = Hyperparameter(depth, leaf, td)
 
 c = td.classify(h, td.testing[0])
 
-print(c.classification)
+result = c.classification[0]
+
+print("Result: " + str(result))
+
+# TEST
+
+waiting_result = 1
+
+print("Waiting Result: " + str(waiting_result))
+
+assert waiting_result == result
+
+print("Test passed.")

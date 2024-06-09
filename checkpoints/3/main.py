@@ -106,4 +106,16 @@ uc = UnknownClient(
 
 c = td.classify(h, uc)
 
-print(c.classification)
+result = c.classification[0]
+
+print("Result: " + str(result))
+
+# TEST
+
+waiting_result = 1
+
+print("Waiting Result: " + str(waiting_result))
+
+assert waiting_result == result
+
+print("Test passed.")

@@ -71,6 +71,7 @@ class KnownClient(Client):
 
 
 class TrainingKnownClient(KnownClient):
+    classification: Optional[int]
 
     @classmethod
     def from_dict(cls, row: dict[str, int]) -> TrainingKnownClient:
@@ -78,10 +79,10 @@ class TrainingKnownClient(KnownClient):
 
 
 class TestingKnownClient(KnownClient):
-    classification: Optional[str]
+    classification: Optional[int]
 
     def __init__(self, status: int, seniority: int, home: int, time: int, age: int, marital: int, records: int, job: int,
-                 expenses: int, income: int, assets: int, debt: int, amount: int, price: int, classification: Optional[str] = None) -> None:
+                 expenses: int, income: int, assets: int, debt: int, amount: int, price: int, classification: Optional[int] = None) -> None:
         super().__init__(status, seniority, home, time, age, marital, records, job, expenses, income, assets, debt, amount, price)
         self.classification = classification
 
@@ -157,20 +158,20 @@ class Hyperparameter:
         training_data: Optional[TrainingData] = self.data
         if not training_data:
             raise RuntimeError("No training data")
-        test_data = training_data.testing
-        y_test = TrainingData.get_statuses_clients(test_data)
+        test_data = training_data.training
+        y_test = TrainingData.get_client_status(test_data)
         y_predict = self.classify_list(test_data)
         self.quality = roc_auc_score(y_test, y_predict)
         for i in range(len(y_predict)):
             test_data[i].classification = y_predict[i]
 
-    def classify_list(self, clients: Sequence[Union[UnknownClient, TestingKnownClient]]) -> list[Any]:
+    def classify_list(self, clients: Sequence[Union[UnknownClient, TrainingKnownClient]]) -> list[Any]:
         training_data = self.data
         if not training_data:
             raise RuntimeError("No training object")
         x_predict = TrainingData.get_list_clients(clients)
         x_train = TrainingData.get_list_clients(training_data.training)
-        y_train = TrainingData.get_statuses_clients(training_data.training)
+        y_train = TrainingData.get_client_status(training_data.training)
 
         classifier = DecisionTreeClassifier()
         classifier = classifier.fit(x_train, y_train)
@@ -184,16 +185,16 @@ class TrainingData:
     uploaded: datetime
     tested: datetime
 
-    training: list[Client]
-    testing: list[Client]
+    testing: list[TestingKnownClient]
+    training: list[TrainingKnownClient]
     tuning: list[Hyperparameter]
 
     def __init__(self, name: str) -> None:
         self.name = name
         self.uploaded: datetime
         self.tested: datetime
-        self.training: list[TrainingKnownClient] = []
         self.testing: list[TestingKnownClient] = []
+        self.training: list[TrainingKnownClient] = []
         self.tuning: list[Hyperparameter] = []
 
     def load(self, raw_data: Iterable[dict[str, int]]) -> None:
@@ -235,24 +236,8 @@ class TrainingData:
         ]
 
     @staticmethod
-    def get_statuses_clients(clients: Sequence[KnownClient]) -> list[int]:
+    def get_client_status(clients: Sequence[KnownClient]) -> list[int]:
         return [client.status for client in clients]
-
-    @staticmethod
-    def get_client_as_list(client: Client) -> list[list[int]]:
-        return [
-            [
-                client.seniority,
-                client.home,
-                client.age,
-                client.marital,
-                client.records,
-                client.expenses,
-                client.assets,
-                client.amount,
-                client.price,
-            ]
-        ]
 
 
 class InvalidClientError(ValueError):

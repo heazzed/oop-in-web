@@ -58,11 +58,12 @@ class Hyperparameter:
 
     def test(self) -> None:
         pass_count, fail_count = 0, 0
-        for client in self.data.testing:
-            if client.is_matches():
-                pass_count += 1
-            else:
-                fail_count += 1
+        if self.data is not None:
+            for client in self.data.testing:
+                if client.is_matches():
+                    pass_count += 1
+                else:
+                    fail_count += 1
         self.quality = pass_count / (pass_count + fail_count)
 
     def classify(self, clients: Sequence[Client]) -> list[Any]:

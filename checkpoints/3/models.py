@@ -50,7 +50,7 @@ class TestingKnownClient(KnownClient):
     classification: Optional[int]
 
     def __init__(self, status: int, seniority: int, home: int, time: int, age: int, marital: int, records: int, job: int,
-                 expenses: int, income: int, assets: int, debt: int, amount: int, price: int, classification: Optional[str] = None) -> None:
+                 expenses: int, income: int, assets: int, debt: int, amount: int, price: int, classification: Optional[int] = None) -> None:
         super().__init__(status, seniority, home, time, age, marital, records, job, expenses, income, assets, debt, amount, price)
         self.classification = classification
 
