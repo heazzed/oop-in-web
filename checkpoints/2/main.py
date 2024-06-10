@@ -4,7 +4,7 @@ from models import TrainingData, Hyperparameter
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction import DictVectorizer
 
-df = pd.read_csv('../data.csv')
+df = pd.read_csv('../../data.csv')
 df.columns = df.columns.str.lower()
 
 status_values = {

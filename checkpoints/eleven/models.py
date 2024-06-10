@@ -1,4 +1,7 @@
 from __future__ import annotations
+
+from abc import ABC
+
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import roc_auc_score
 from datetime import datetime, timedelta
@@ -126,7 +129,7 @@ class UnknownClient(Client):
             raise InvalidClientError(f"invalid {data!r}")
 
 
-class ClassifiedClient(Client):
+class ClassifiedClient(Client, ABC):
     classification: Optional[str]
 
     def __init__(self, classification: Optional[str], client: UnknownClient) -> None:
@@ -146,6 +149,26 @@ class ClassifiedClient(Client):
             price=client.price
         )
         self.classification = classification
+
+    def __repr__(self) -> str:
+        return (
+            f"{self.__class__.__name__}("
+            f"seniority={self.seniority}, "
+            f"home={self.home}, "
+            f"age={self.age}, "
+            f"time={self.time}, "
+            f"marital={self.marital}, "
+            f"records={self.records}, "
+            f"job={self.job}, "
+            f"expenses={self.expenses}, "
+            f"income={self.income}, "
+            f"assets={self.assets}, "
+            f"debt={self.debt}, "
+            f"amount={self.amount}, "
+            f"price={self.price}, "
+            f"classification={self.classification!r}"
+            f")"
+        )
 
 
 class Hyperparameter:

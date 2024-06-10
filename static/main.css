@@ -1,0 +1,35 @@
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+th {
+  max-width: 21px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+.small {
+  width: 20px;
+}
+
+.medium {
+  width: 30px;
+}
+
+.large {
+  width: 50px;
+}
+
+select {
+    min-width: 50px;
+}
